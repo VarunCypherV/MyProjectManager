@@ -76,12 +76,12 @@
             <h3>Yet to Start</h3>
             <ul>
                 {% for project in yet_to_start_projects %}
-                    <li>{{ project.project_name }}
+                    <li>{{ project[1] }}
                         <form action="{{ url_for('move_project') }}" method="post" class="move-button">
-                            <input type="hidden" name="project_id" value="{{ project.id }}">
+                            <input type="hidden" name="project_id" value="{{ project[0] }}">
                             <input type="hidden" name="current_status" value="Yet to Start">
                             <input type="hidden" name="new_status" value="In Progress">
-                            <button type="submit">Move to In Progress</button>
+                            <button type="submit">-></button>
                         </form>
                     </li>
                 {% endfor %}
@@ -97,12 +97,12 @@
             <h3>In Progress</h3>
             <ul>
                 {% for project in in_progress_projects %}
-                    <li>{{ project.project_name }}
+                    <li>{{ project[1] }}
                         <form action="{{ url_for('move_project') }}" method="post" class="move-button">
-                            <input type="hidden" name="project_id" value="{{ project.id }}">
+                            <input type="hidden" name="project_id" value="{{ project[0] }}">
                             <input type="hidden" name="current_status" value="In Progress">
                             <input type="hidden" name="new_status" value="Finished">
-                            <button type="submit">Move to Finished</button>
+                            <button type="submit">-></button>
                         </form>
                     </li>
                 {% endfor %}
@@ -113,7 +113,7 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                    <li>{{ project.project_name }}</li>
+                    <li>{{ project[1] }}</li>
                 {% endfor %}
             </ul>
         </div>

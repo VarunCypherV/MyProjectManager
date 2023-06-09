@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 
@@ -33,9 +34,9 @@ def register_user(username, password):
 
 def get_projects_by_status(status):
     cur = mysql.cursor()
-    query = "SELECT project_name FROM projects WHERE status = %s"
+    query = "SELECT * FROM projects WHERE status = %s"
     cur.execute(query, (status,))
-    projects = [row[0] for row in cur.fetchall()]
+    projects = cur.fetchall()
     cur.close()
     return projects
 
@@ -109,90 +110,21 @@ def add_project():
     return redirect('/project/' + session['username'])
 
 @app.route('/move_project', methods=['POST'])
-def move_project():
-    project_id = request.form['project_id']
-    new_status = request.form['new_status']
-
-    # Connect to the database
-    connection = mysql.connector.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB']
-    )
-
-    # Create a cursor object to execute queries
-    cursor = connection.cursor()
-
-    # Define the SQL query to update the project status
-    query = "UPDATE projects SET status = %s WHERE id = %s"
-
-    # Execute the query with the new_status and project_id parameters
-    cursor.execute(query, (new_status, project_id))
-
-    # Commit the changes to the database
-    connection.commit()
-
-    # Close the cursor and the database connection
-    cursor.close()
-    connection.close()
-
-    return redirect(url_for('project', username=session['username']))
-
-@app.route('/remove_project', methods=['POST'])
-def remove_project():
-    project_id = request.form['project_id']
-
-    # Connect to the database
-    connection = mysql.connector.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB']
-    )
-
-    # Create a cursor object to execute queries
-    cursor = connection.cursor()
-
-    # Define the SQL query to delete the project
-    query = "DELETE FROM projects WHERE id = %s"
-
-    # Execute the query with the project_id parameter
-    cursor.execute(query, (project_id,))
-
-    # Commit the changes to the database
-    connection.commit()
-
-    # Close the cursor and the database connection
-    cursor.close()
-    connection.close()
-
-    return redirect(url_for('project', username=session['username']))
 @app.route('/move_project', methods=['POST'])
 def move_project():
     project_id = request.form['project_id']
     current_status = request.form['current_status']
     new_status = request.form['new_status']
 
-    # Connect to the database
-    connection = mysql.connector.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB']
-    )
-
-    # Create a cursor object to execute queries
-    cursor = connection.cursor()
-
     # Update the project status
     query = "UPDATE projects SET status = %s WHERE id = %s AND status = %s"
-    cursor.execute(query, (new_status, project_id, current_status))
-    connection.commit()
 
-    # Close the cursor and the database connection
+    # Create a cursor object to execute queries
+    cursor = mysql.cursor()
+    cursor.execute(query, (new_status, project_id, current_status))
+    mysql.commit()
+
     cursor.close()
-    connection.close()
 
     return redirect(url_for('project', username=session['username']))
 
