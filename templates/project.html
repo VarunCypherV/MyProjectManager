@@ -34,15 +34,27 @@
         }
 
         .column li {
+            position: relative;
             background-color: #f2f2f2;
             padding: 8px;
             margin-bottom: 8px;
             border-radius: 5px;
-            cursor: move;
         }
 
         .column li:hover {
             background-color: #e6e6e6;
+        }
+
+        .column li form {
+            display: inline;
+        }
+
+        .column li button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            padding: 5px 10px;
         }
 
         form {
@@ -52,7 +64,8 @@
             align-items: center;
         }
 
-        form input[type="text"], form select {
+        form input[type="text"],
+        form select {
             padding: 5px;
             margin-right: 10px;
         }
@@ -76,15 +89,14 @@
             <h3>Yet to Start</h3>
             <ul>
                 {% for project in yet_to_start_projects %}
-                    <li>{{ project[1] }}
-                        <form action="{{ url_for('move_project') }}" method="post">
-                            <input type="hidden" name="project_id" value="{{ project[0] }}">
-                            <input type="hidden" name="current_status" value="Yet to Start">
-                            <input type="hidden" name="new_status" value="In Progress">
-                            <button type="submit">-></button>
-                        </form>
-
-                    </li>
+                <li>{{ project[1] }}
+                    <form action="{{ url_for('move_project') }}" method="post">
+                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <input type="hidden" name="current_status" value="Yet to Start">
+                        <input type="hidden" name="new_status" value="In Progress">
+                        <button type="submit">-></button>
+                    </form>
+                </li>
                 {% endfor %}
                 <form action="{{ url_for('add_project') }}" method="post">
                     <input type="text" name="project_name" placeholder="Project Name" required>
@@ -98,15 +110,14 @@
             <h3>In Progress</h3>
             <ul>
                 {% for project in in_progress_projects %}
-                    <li>{{ project[1] }}
-                        <form action="{{ url_for('move_project') }}" method="post">
-                            <input type="hidden" name="project_id" value="{{ project[0] }}">
-                            <input type="hidden" name="current_status" value="In Progress">
-                            <input type="hidden" name="new_status" value="Finished">
-                            <button type="submit">-></button>
-                        </form>
-                
-                    </li>
+                <li>{{ project[1] }}
+                    <form action="{{ url_for('move_project') }}" method="post">
+                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <input type="hidden" name="current_status" value="In Progress">
+                        <input type="hidden" name="new_status" value="Finished">
+                        <button type="submit">-></button>
+                    </form>
+                </li>
                 {% endfor %}
             </ul>
         </div>
@@ -115,14 +126,13 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                    <li>{{ project[1] }}
-                        <form action="{{ url_for('delete_project', project_id=project[0]) }}" method="post" class="delete-button">
-
-
-                            <input type="hidden" name="project_id" value="{{ project[0] }}">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </li>
+                <li>{{ project[1] }}
+                    <form action="{{ url_for('delete_project', project_id=project[0]) }}" method="post"
+                        class="delete-button">
+                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
                 {% endfor %}
             </ul>
         </div>
