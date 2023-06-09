@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .kanban-board {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .column {
+            flex-basis: 30%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .column h2 {
+            text-align: center;
+        }
+
+        .column ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .column li {
+            background-color: #f2f2f2;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: move;
+        }
+
+        .column li:hover {
+            background-color: #e6e6e6;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form input[type="text"], form select {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        form button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+
+    <h2>Projects</h2>
+
+    <div class="kanban-board">
+        <div class="column">
+            <h3>Yet to Start</h3>
+            <ul>
+                {% for project in yet_to_start_projects %}
+                    <li>{{ project }}</li>
+                    <form action="{{ url_for('move_project') }}" method="post">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
+                        <input type="hidden" name="current_status" value="Yet to Start">
+                        <input type="hidden" name="new_status" value="In Progress">
+                        <button type="submit">Move to In Progress</button>
+                    </form>
+                {% endfor %}
+                <form action="{{ url_for('add_project') }}" method="post">
+                    <input type="text" name="project_name" placeholder="Project Name" required>
+                    <input type="hidden" name="status" value="Yet to Start">
+                    <button type="submit">Add Project</button>
+                </form>
+            </ul>
+        </div>
+
+        <div class="column">
+            <h3>In Progress</h3>
+            <ul>
+                {% for project in in_progress_projects %}
+                    <li>{{ project }}</li>
+                    <form action="{{ url_for('move_project') }}" method="post">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
+                        <input type="hidden" name="current_status" value="In Progress">
+                        <input type="hidden" name="new_status" value="Finished">
+                        <button type="submit">Move to Finished</button>
+                    </form>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="column">
+            <h3>Finished</h3>
+            <ul>
+                {% for project in finished_projects %}
+                    <li>{{ project }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
