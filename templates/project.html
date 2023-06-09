@@ -6,10 +6,13 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #fdefd3;
+            background-image: repeating-linear-gradient(45deg, #fceec9, #fceec9 10px, #fdefd3 10px, #fdefd3 20px);
         }
 
         h1 {
             text-align: center;
+            color: #333;
         }
 
         .kanban-board {
@@ -22,10 +25,21 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #eef7f2;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .column h2 {
+        .column:nth-child(2) {
+            background-color: #f3e9ee;
+        }
+
+        .column:nth-child(3) {
+            background-color: #e9edf3;
+        }
+
+        .column h3 {
             text-align: center;
+            color: #555;
         }
 
         .column ul {
@@ -39,6 +53,8 @@
             padding: 8px;
             margin-bottom: 8px;
             border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
         }
 
         .column li:hover {
@@ -55,6 +71,15 @@
             right: 10px;
             transform: translateY(-50%);
             padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .column li button:hover {
+            background-color: #555;
         }
 
         form {
@@ -72,6 +97,15 @@
 
         form button {
             padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #555;
         }
 
         .delete-button {
