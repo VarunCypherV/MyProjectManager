@@ -61,7 +61,7 @@
             padding: 5px 10px;
         }
 
-        .move-button {
+        .delete-button {
             margin-left: 5px;
         }
     </style>
@@ -77,12 +77,13 @@
             <ul>
                 {% for project in yet_to_start_projects %}
                     <li>{{ project[1] }}
-                        <form action="{{ url_for('move_project') }}" method="post" class="move-button">
+                        <form action="{{ url_for('move_project') }}" method="post">
                             <input type="hidden" name="project_id" value="{{ project[0] }}">
                             <input type="hidden" name="current_status" value="Yet to Start">
                             <input type="hidden" name="new_status" value="In Progress">
                             <button type="submit">-></button>
                         </form>
+
                     </li>
                 {% endfor %}
                 <form action="{{ url_for('add_project') }}" method="post">
@@ -98,12 +99,13 @@
             <ul>
                 {% for project in in_progress_projects %}
                     <li>{{ project[1] }}
-                        <form action="{{ url_for('move_project') }}" method="post" class="move-button">
+                        <form action="{{ url_for('move_project') }}" method="post">
                             <input type="hidden" name="project_id" value="{{ project[0] }}">
                             <input type="hidden" name="current_status" value="In Progress">
                             <input type="hidden" name="new_status" value="Finished">
                             <button type="submit">-></button>
                         </form>
+                
                     </li>
                 {% endfor %}
             </ul>
@@ -113,7 +115,14 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                    <li>{{ project[1] }}</li>
+                    <li>{{ project[1] }}
+                        <form action="{{ url_for('delete_project', project_id=project[0]) }}" method="post" class="delete-button">
+
+
+                            <input type="hidden" name="project_id" value="{{ project[0] }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 
@@ -110,7 +109,6 @@ def add_project():
     return redirect('/project/' + session['username'])
 
 @app.route('/move_project', methods=['POST'])
-@app.route('/move_project', methods=['POST'])
 def move_project():
     project_id = request.form['project_id']
     current_status = request.form['current_status']
@@ -128,6 +126,16 @@ def move_project():
 
     return redirect(url_for('project', username=session['username']))
 
+@app.route('/delete_project/<int:project_id>', methods=['POST'])
+def delete_project(project_id):
+    # Delete the project from the database
+    query = "DELETE FROM projects WHERE id = %s"
+    cursor = mysql.cursor()
+    cursor.execute(query, (project_id,))
+    mysql.commit()
+    cursor.close()
+
+    return redirect(url_for('project', username=session['username']))
 
 if __name__ == '__main__':
     app.secret_key = 'your-secret-key'  # Set a secret key for session management
