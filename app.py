@@ -168,6 +168,34 @@ def remove_project():
     connection.close()
 
     return redirect(url_for('project', username=session['username']))
+@app.route('/move_project', methods=['POST'])
+def move_project():
+    project_id = request.form['project_id']
+    current_status = request.form['current_status']
+    new_status = request.form['new_status']
+
+    # Connect to the database
+    connection = mysql.connector.connect(
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB']
+    )
+
+    # Create a cursor object to execute queries
+    cursor = connection.cursor()
+
+    # Update the project status
+    query = "UPDATE projects SET status = %s WHERE id = %s AND status = %s"
+    cursor.execute(query, (new_status, project_id, current_status))
+    connection.commit()
+
+    # Close the cursor and the database connection
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('project', username=session['username']))
+
 
 if __name__ == '__main__':
     app.secret_key = 'your-secret-key'  # Set a secret key for session management
