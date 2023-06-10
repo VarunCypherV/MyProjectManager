@@ -111,6 +111,24 @@
         .delete-button {
             margin-left: 5px;
         }
+
+        /* Project details section styles */
+        .project-details {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f2f2f2;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-details h2 {
+            color: #555;
+        }
+
+        .project-details p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -123,9 +141,9 @@
             <h3>Yet to Start</h3>
             <ul>
                 {% for project in yet_to_start_projects %}
-                <li>{{ project[1] }}
+                <li>{{ project.project_name }}
                     <form action="{{ url_for('move_project') }}" method="post">
-                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
                         <input type="hidden" name="current_status" value="Yet to Start">
                         <input type="hidden" name="new_status" value="In Progress">
                         <button type="submit">-></button>
@@ -144,9 +162,9 @@
             <h3>In Progress</h3>
             <ul>
                 {% for project in in_progress_projects %}
-                <li>{{ project[1] }}
+                <li>{{ project.project_name }}
                     <form action="{{ url_for('move_project') }}" method="post">
-                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
                         <input type="hidden" name="current_status" value="In Progress">
                         <input type="hidden" name="new_status" value="Finished">
                         <button type="submit">-></button>
@@ -160,10 +178,10 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                <li>{{ project[1] }}
-                    <form action="{{ url_for('delete_project', project_id=project[0]) }}" method="post"
+                <li>{{ project.project_name }}
+                    <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post"
                         class="delete-button">
-                        <input type="hidden" name="project_id" value="{{ project[0] }}">
+                        <input type="hidden" name="project_id" value="{{ project.id }}">
                         <button type="submit">Delete</button>
                     </form>
                 </li>
@@ -171,5 +189,34 @@
             </ul>
         </div>
     </div>
+
+    <!-- Project details section -->
+    <div class="project-details">
+        <h2>Project Details</h2>
+        <p>Collaborators: <span id="collaborators"></span></p>
+        <p>Start Date: <span id="start_date"></span></p>
+        <p>End Date: <span id="end_date"></span></p>
+        <!-- Add more details here -->
+    </div>
+
+    <script>
+        function showProjectDetails(projectId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/project_details/" + projectId, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var projectDetails = JSON.parse(xhr.responseText);
+
+                    document.getElementById("collaborators").textContent = projectDetails.collaborators;
+                    document.getElementById("start_date").textContent = projectDetails.start_date;
+                    document.getElementById("end_date").textContent = projectDetails.end_date;
+                    // Add more elements for other project details
+
+                    document.getElementById("project_details_section").style.display = "block";
+                }
+            };
+            xhr.send();
+        }
+    </script>
 </body>
 </html>

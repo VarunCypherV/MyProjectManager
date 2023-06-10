@@ -136,7 +136,44 @@ def delete_project(project_id):
     cursor.close()
 
     return redirect(url_for('project', username=session['username']))
+def get_project_details(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM project_details WHERE project_id = %s"
+    cur.execute(query, (project_id,))
+    project_details = cur.fetchone()
+    cur.close()
+    return project_details
 
+def get_collaborators(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM collaborators WHERE project_id = %s"
+    cur.execute(query, (project_id,))
+    collaborators = cur.fetchall()
+    cur.close()
+    return collaborators
+def get_projects_by_status(status):
+    cur = mysql.cursor()
+    query = "SELECT * FROM projects WHERE status = %s"
+    cur.execute(query, (status,))
+    projects = cur.fetchall()
+    cur.close()
+    return [{'id': project[0], 'project_name': project[1]} for project in projects]
+def get_projects_by_id(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM projects WHERE id = %s"
+    cur.execute(query, (project_id,))
+    project = cur.fetchone()
+    cur.close()
+    return project
+
+@app.route('/project/<username>/<int:project_id>')
+def project_details(username, project_id):
+    # Get project details
+    project = get_projects_by_id(project_id)
+    project_details = get_project_details(project_id)
+    collaborators = get_collaborators(project_id)
+
+    return render_template('project_details.html', username=username, project=project, project_details=project_details, collaborators=collaborators)
 if __name__ == '__main__':
     app.secret_key = 'your-secret-key'  # Set a secret key for session management
     app.run(debug=True)
