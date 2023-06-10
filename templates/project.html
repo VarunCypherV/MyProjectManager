@@ -115,11 +115,12 @@
         /* Project details section styles */
         .project-details {
             margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            display: flex;
+        }
+
+        .project-details .column {
+            flex-basis: 33.33%;
             padding: 10px;
-            background-color: #f2f2f2;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .project-details h2 {
@@ -128,6 +129,13 @@
 
         .project-details p {
             margin: 0;
+        }
+
+        .project-details img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -141,7 +149,8 @@
             <h3>Yet to Start</h3>
             <ul>
                 {% for project in yet_to_start_projects %}
-                <li>{{ project.project_name }}
+                <li onclick="showProjectDetails(this.id)" id="{{ project.id }}">
+                    {{ project.project_name }}
                     <form action="{{ url_for('move_project') }}" method="post">
                         <input type="hidden" name="project_id" value="{{ project.id }}">
                         <input type="hidden" name="current_status" value="Yet to Start">
@@ -162,7 +171,8 @@
             <h3>In Progress</h3>
             <ul>
                 {% for project in in_progress_projects %}
-                <li>{{ project.project_name }}
+                <li onclick="showProjectDetails(this.id)" id="{{ project.id }}">
+                    {{ project.project_name }}
                     <form action="{{ url_for('move_project') }}" method="post">
                         <input type="hidden" name="project_id" value="{{ project.id }}">
                         <input type="hidden" name="current_status" value="In Progress">
@@ -192,11 +202,20 @@
 
     <!-- Project details section -->
     <div class="project-details">
-        <h2>Project Details</h2>
-        <p>Collaborators: <span id="collaborators"></span></p>
-        <p>Start Date: <span id="start_date"></span></p>
-        <p>End Date: <span id="end_date"></span></p>
-        <!-- Add more details here -->
+        <div class="column">
+            <h2>Collaborators</h2>
+            <p id="collaborators"></p>
+        </div>
+        <div class="column">
+            <h2>Project Details</h2>
+            <p>Start Date: <span id="start_date"></span></p>
+            <p>Budget: <span id="budget"></span></p>
+            <!-- Add more project details as required -->
+        </div>
+        <div class="column">
+            <h2>Image</h2>
+            <img id="project_image" src="" alt="Project Image">
+        </div>
     </div>
 
     <script>
@@ -207,12 +226,15 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var projectDetails = JSON.parse(xhr.responseText);
 
-                    document.getElementById("collaborators").textContent = projectDetails.collaborators;
-                    document.getElementById("start_date").textContent = projectDetails.start_date;
-                    document.getElementById("end_date").textContent = projectDetails.end_date;
-                    // Add more elements for other project details
+                    // Update collaborators
+                    document.getElementById("collaborators").textContent = projectDetails.collaborators.join(", ");
 
-                    document.getElementById("project_details_section").style.display = "block";
+                    // Update project details
+                    document.getElementById("start_date").textContent = projectDetails.start_date;
+                    document.getElementById("budget").textContent = projectDetails.budget;
+
+                    // Update project image
+                    document.getElementById("project_image").src = projectDetails.image_url;
                 }
             };
             xhr.send();

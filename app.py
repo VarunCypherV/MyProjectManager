@@ -7,7 +7,7 @@ app.secret_key = 'your-secret-key'
 app.config['MYSQL_HOST'] = 'localhost'  # Replace with your MySQL host
 app.config['MYSQL_USER'] = 'root'  # Replace with your MySQL username
 app.config['MYSQL_PASSWORD'] = 'Mysqlvarun#2004'  # Replace with your MySQL password
-app.config['MYSQL_DB'] = 'ProjectManagement'  # Replace with your MySQL database name
+app.config['MYSQL_DB'] = 'NewProjectManagement'  # Replace with your MySQL database name
 
 mysql = mysql.connector.connect(
     host=app.config['MYSQL_HOST'],
