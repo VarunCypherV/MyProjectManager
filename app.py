@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
+from flask import jsonify
+from bs4 import BeautifulSoup
+
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
@@ -175,9 +178,6 @@ def project_details(project_id):
 
     # Render the project details on the same page
     return render_template('project.html', project=project, project_details=project_details, collaborators=collaborators)
-
-
-
 
 
 if __name__ == '__main__':

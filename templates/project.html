@@ -188,7 +188,8 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                <li>{{ project.project_name }}
+                <li onclick="showProjectDetails(this.id)">
+                    {{ project.project_name }}
                     <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post"
                         class="delete-button">
                         <input type="hidden" name="project_id" value="{{ project.id }}">
@@ -218,53 +219,5 @@
         </div>
     </div>
 
-    <script>
-        function showProjectDetails(projectId) {
-            // Create a new XMLHttpRequest object
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/project_details/" + projectId, true);
-
-            // Set up the onload event handler
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    var projectDetails = JSON.parse(xhr.responseText);
-                    console.log(projectDetails);
-
-                    // Update collaborators
-                    var collaboratorsList = document.getElementById("collaborators");
-                    collaboratorsList.innerHTML = "";
-                    projectDetails.collaborators.forEach(function (collaborator) {
-                        var collaboratorItem = document.createElement("li");
-                        collaboratorItem.textContent = collaborator;
-                        collaboratorsList.appendChild(collaboratorItem);
-                    });
-
-                    // Update project details
-                    document.getElementById("start_date").textContent = projectDetails.start_date;
-                    document.getElementById("budget").textContent = projectDetails.budget;
-
-                    // Update project image
-                    document.getElementById("project_image").src = projectDetails.image_url;
-
-                    // Display the project details in the existing UI
-                    var projectDetailsContainer = document.getElementById("project-details");
-                    projectDetailsContainer.style.display = "block";
-                } else {
-                    console.error("Error fetching project details. Status code: " + xhr.status);
-                }
-            };
-
-            // Set up the onerror event handler
-            xhr.onerror = function () {
-                console.error("Error fetching project details. Network error.");
-            };
-
-            // Send the request
-            xhr.send();
-        }
-    </script>
-    
-    
-    
 </body>
 </html>
