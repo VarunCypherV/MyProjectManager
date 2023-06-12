@@ -177,7 +177,9 @@ def project_details(project_id):
     collaborators = get_collaborators(project_id)
     return jsonify({
         'start_date': project_details[2].isoformat(),
+        'end_date': project_details[3].isoformat(),
         'budget': project_details[4],
+        'owner': project_details[5],
         'collaborators': [{'collaborator_name': collaborator[2]} for collaborator in collaborators]
     })
 

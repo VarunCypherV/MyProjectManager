@@ -13,6 +13,8 @@
                     $('#collaborators').empty();
                     $('#start_date').text(response.start_date);
                     $('#budget').text(response.budget);
+                    $('#end_date').text(response.end_date);
+                    $('#owner').text(response.owner);
 
                     var collaborators = response.collaborators;
                     for (var i = 0; i < collaborators.length; i++) {
@@ -235,7 +237,9 @@
         <div class="column">
             <h2>Project Details</h2>
             <p>Start Date: <span id="start_date"></span></p>
+            <p>end_date : <span id="end_date"></span></p>
             <p>Budget: <span id="budget"></span></p>
+            <p>Owner: <span id="owner"></span></p>
             <!-- Add more project details as required -->
         </div>
         <div class="column">
