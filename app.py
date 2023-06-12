@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from flask import jsonify
-from bs4 import BeautifulSoup
+
 
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app.secret_key = 'your-secret-key'
 app.config['MYSQL_HOST'] = 'localhost'  # Replace with your MySQL host
 app.config['MYSQL_USER'] = 'root'  # Replace with your MySQL username
 app.config['MYSQL_PASSWORD'] = 'Mysqlvarun#2004'  # Replace with your MySQL password
-app.config['MYSQL_DB'] = 'NewProjectManagement'  # Replace with your MySQL database name
+app.config['MYSQL_DB'] = 'NewProjectManagement1'  # Replace with your MySQL database name
 
 mysql = mysql.connector.connect(
     host=app.config['MYSQL_HOST'],
@@ -183,7 +183,28 @@ def project_details(project_id):
         'collaborators': [{'collaborator_name': collaborator[2]} for collaborator in collaborators]
     })
 
+@app.route('/collaborator-details/<int:collaborator_id>', methods=['GET'])
+def collaborator_details(collaborator_id):
+    # Retrieve collaborator details from the database
+    # You can modify the query and code according to your database schema
+    # Here's an example assuming you have a table named 'collaborators' for collaborator details
 
+    cur = mysql.cursor()
+    query = "SELECT * FROM collaborators WHERE id = %s"
+    cur.execute(query, (collaborator_id,))
+    collaborator = cur.fetchone()
+    cur.close()
+
+    # Create a response object containing collaborator details
+    collaborator_details = {
+        'name': collaborator[0],
+        'worked_projects': collaborator[1],  # Number of worked projects
+        'current_projects': collaborator[2],  # Number of current projects
+        'age': collaborator[3],  # Age
+        'emp_id': collaborator[4]  # Employee ID
+    }
+
+    return jsonify(collaborator_details)
 
 
 if __name__ == '__main__':

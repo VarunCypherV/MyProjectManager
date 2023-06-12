@@ -28,6 +28,24 @@
                 }
             });
         }
+
+        function showCollaboratorDetails(collaboratorId) {
+    $.ajax({
+        url: '/collaborator-details/' + collaboratorId,
+        type: 'GET',
+        success: function (response) {
+            // Display collaborator details
+            $('#collaborator_name').text(response.worked_projects);
+            $('#collaborator_emp_id').text(response.emp_id);
+            $('#collaborator_age').text(response.age);
+            $('#collaborator_worked_projects').text(response.worked_projects);
+            $('#collaborator_current_projects').text(response.current_projects);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
     </script>
     <style>
         body {
@@ -215,7 +233,7 @@
             <h3>Finished</h3>
             <ul>
                 {% for project in finished_projects %}
-                <li onclick="showProjectDetails(this.id)">
+                <li id="{{ project.id }}"  onclick="showProjectDetails(this.id)">
                     {{ project.project_name }}
                     <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post"
                         class="delete-button">
@@ -232,7 +250,7 @@
     <div class="project-details">
         <div class="column">
             <h2>Collaborators</h2>
-            <ul id="collaborators"></ul>
+            <ul id="collaborators" onclick="showCollaboratorDetails(collaboratorId)"></ul>
         </div>
         <div class="column">
             <h2>Project Details</h2>
@@ -243,8 +261,12 @@
             <!-- Add more project details as required -->
         </div>
         <div class="column">
-            <h2>Image</h2>
-            <img id="project_image" src="" alt="Project Image">
+            <h2>name <span id="collaborator_name"></span></h2>
+            <p>worked_projects: <span id="collaborator_worked_projects"></span></p>
+            <p>current_projects: <span id="collaborator_current_projects"></span></p>
+            <p>age<span id="collaborator_age"></span></p>
+            <p>emp_id<span id="collaborator_emp_id"></span></p>
+        </ul>
         </div>
     </div>
 </body>
