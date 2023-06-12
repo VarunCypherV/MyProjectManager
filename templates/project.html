@@ -2,6 +2,31 @@
 <html>
 <head>
     <title>Project Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function showProjectDetails(projectId) {
+            $.ajax({
+                url: '/project-details/' + projectId,
+                type: 'GET',
+                success: function (response) {
+                    $('#collaborators').empty();
+                    $('#start_date').text(response.start_date);
+                    $('#budget').text(response.budget);
+
+                    var collaborators = response.collaborators;
+                    for (var i = 0; i < collaborators.length; i++) {
+                        var collaborator = collaborators[i];
+                        var listItem = $('<li>').text(collaborator.collaborator_name);
+                        $('#collaborators').append(listItem);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -218,6 +243,5 @@
             <img id="project_image" src="" alt="Project Image">
         </div>
     </div>
-
 </body>
 </html>

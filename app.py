@@ -169,15 +169,19 @@ def delete_project(project_id):
     return redirect(url_for('project', username=session['username']))
 
 
-@app.route('/project_details/<int:project_id>')
+
+@app.route('/project-details/<int:project_id>', methods=['GET'])
 def project_details(project_id):
-    # Get project details
     project = get_project_by_id(project_id)
     project_details = get_project_details(project_id)
     collaborators = get_collaborators(project_id)
+    return jsonify({
+        'start_date': project_details[2].isoformat(),
+        'budget': project_details[4],
+        'collaborators': [{'collaborator_name': collaborator[2]} for collaborator in collaborators]
+    })
 
-    # Render the project details on the same page
-    return render_template('project.html', project=project, project_details=project_details, collaborators=collaborators)
+
 
 
 if __name__ == '__main__':
