@@ -168,8 +168,6 @@ def delete_project(project_id):
 
     return redirect(url_for('project', username=session['username']))
 
-
-
 @app.route('/project-details/<int:project_id>', methods=['GET'])
 def project_details(project_id):
     project = get_project_by_id(project_id)
@@ -183,19 +181,19 @@ def project_details(project_id):
         'collaborators': [{'collaborator_name': collaborator[2]} for collaborator in collaborators]
     })
 
-@app.route('/collaborator-details/<int:collaborator_id>', methods=['GET'])
-def collaborator_details(collaborator_id):
-    # Retrieve collaborator details from the database
-    # You can modify the query and code according to your database schema
-    # Here's an example assuming you have a table named 'collaborators' for collaborator details
 
+
+
+
+
+
+@app.route('/collaborator-details/<int:emp_id>', methods=['GET'])
+def collaborator_details(emp_id):
     cur = mysql.cursor()
-    query = "SELECT * FROM collaborators WHERE id = %s"
-    cur.execute(query, (collaborator_id,))
+    query = "SELECT * FROM collaborators WHERE emp_id = %s"
+    cur.execute(query, (emp_id,))
     collaborator = cur.fetchone()
     cur.close()
-
-    # Create a response object containing collaborator details
     collaborator_details = {
         'name': collaborator[0],
         'worked_projects': collaborator[1],  # Number of worked projects
@@ -206,6 +204,26 @@ def collaborator_details(collaborator_id):
 
     return jsonify(collaborator_details)
 
+# @app.route('/collaborator-details/<int:collaborator_id>', methods=['GET'])
+# def collaborator_details(collaborator_id):
+#     cur = mysql.cursor()
+#     query = "SELECT * FROM collaborators WHERE id = %s"
+#     cur.execute(query, (collaborator_id,))
+#     collaborator = cur.fetchone()
+#     cur.close()
+#     collaborator_details = {
+#         'name': collaborator[0],
+#         'worked_projects': collaborator[1],  # Number of worked projects
+#         'current_projects': collaborator[2],  # Number of current projects
+#         'age': collaborator[3],  # Age
+#         'emp_id': collaborator[4]  # Employee ID
+#     }
+#     return jsonify(collaborator_details)
+# Add this route at the end of the Flask app
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)

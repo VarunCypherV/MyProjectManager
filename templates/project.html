@@ -186,7 +186,7 @@
 </head>
 <body>
     <h1>Welcome, {{ username }}!</h1>
-
+    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     <h2>Projects</h2>
 
     <div class="kanban-board">
@@ -250,7 +250,8 @@
     <div class="project-details">
         <div class="column">
             <h2>Collaborators</h2>
-            <ul id="collaborators" onclick="showCollaboratorDetails(collaboratorId)"></ul>
+            <ul id="collaborators" onclick="showCollaboratorDetails(this.id)"> 
+            </ul>
         </div>
         <div class="column">
             <h2>Project Details</h2>
