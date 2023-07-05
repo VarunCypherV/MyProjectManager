@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        function showProjectDetails(projectId) {
+         function showProjectDetails(projectId) {
             $.ajax({
                 url: '/project-details/' + projectId,
                 type: 'GET',
@@ -21,6 +21,8 @@
                         var collaborator = collaborators[i];
                         var listItem = $('<li>').text(collaborator.collaborator_name);
                         $('#collaborators').append(listItem);
+                        listItem.click(showCollaboratorDetails(collaborator.collaborator_id))
+                        
                     }
                 },
                 error: function (error) {
@@ -28,14 +30,14 @@
                 }
             });
         }
-
-        function showCollaboratorDetails(collaboratorId) {
+function showCollaboratorDetails(collaboratorId) {
     $.ajax({
         url: '/collaborator-details/' + collaboratorId,
         type: 'GET',
         success: function (response) {
             // Display collaborator details
-            $('#collaborator_name').text(response.worked_projects);
+            console.log(response);
+            $('#collaborator_name').text(response.name);
             $('#collaborator_emp_id').text(response.emp_id);
             $('#collaborator_age').text(response.age);
             $('#collaborator_worked_projects').text(response.worked_projects);
@@ -46,6 +48,7 @@
         }
     });
 }
+
     </script>
     <style>
         body {
@@ -250,7 +253,8 @@
     <div class="project-details">
         <div class="column">
             <h2>Collaborators</h2>
-            <ul id="collaborators" onclick="showCollaboratorDetails(this.id)"> 
+            
+            <ul id="collaborators" > 
             </ul>
         </div>
         <div class="column">

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from flask import jsonify
-
+import logging
 
 
 app = Flask(__name__)
@@ -35,37 +35,6 @@ def register_user(username, password):
     mysql.commit()
     cur.close()
 
-def get_projects_by_status(status):
-    cur = mysql.cursor()
-    query = "SELECT * FROM projects WHERE status = %s"
-    cur.execute(query, (status,))
-    projects = cur.fetchall()
-    cur.close()
-    return [{'id': project[0], 'project_name': project[1]} for project in projects]
-
-def get_project_by_id(project_id):
-    cur = mysql.cursor()
-    query = "SELECT * FROM projects WHERE id = %s"
-    cur.execute(query, (project_id,))
-    project = cur.fetchone()
-    cur.close()
-    return project
-
-def get_project_details(project_id):
-    cur = mysql.cursor()
-    query = "SELECT * FROM project_details WHERE project_id = %s"
-    cur.execute(query, (project_id,))
-    project_details = cur.fetchone()
-    cur.close()
-    return project_details
-
-def get_collaborators(project_id):
-    cur = mysql.cursor()
-    query = "SELECT * FROM collaborators WHERE project_id = %s"
-    cur.execute(query, (project_id,))
-    collaborators = cur.fetchall()
-    cur.close()
-    return collaborators
 
 @app.route('/')
 def index():
@@ -105,6 +74,31 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
+def get_projects_by_status(status):
+    cur = mysql.cursor()
+    query = "SELECT * FROM projects WHERE status = %s"
+    cur.execute(query, (status,))
+    projects = cur.fetchall()
+    cur.close()
+    return [{'id': project[0], 'project_name': project[1]} for project in projects]
+
+def get_project_by_id(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM projects WHERE id = %s"
+    cur.execute(query, (project_id,))
+    project = cur.fetchone()
+    cur.close()
+    return project
+
+def get_project_details(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM project_details WHERE project_id = %s"
+    cur.execute(query, (project_id,))
+    project_details = cur.fetchone()
+    cur.close()
+    return project_details
+
 
 @app.route('/project/<username>')
 def project(username):
@@ -172,54 +166,47 @@ def delete_project(project_id):
 def project_details(project_id):
     project = get_project_by_id(project_id)
     project_details = get_project_details(project_id)
-    collaborators = get_collaborators(project_id)
+    collaborators= get_collaborators(project_id)
     return jsonify({
         'start_date': project_details[2].isoformat(),
         'end_date': project_details[3].isoformat(),
         'budget': project_details[4],
         'owner': project_details[5],
-        'collaborators': [{'collaborator_name': collaborator[2]} for collaborator in collaborators]
+        'collaborators': [{'collaborator_name': collaborator[2] , 'collaborator_id': collaborator[3]} for collaborator in collaborators]
+
     })
 
-
-
-
-
+def get_collaborators(project_id):
+    cur = mysql.cursor()
+    query = "SELECT * FROM collaborators WHERE project_id = %s"
+    cur.execute(query, (project_id,))
+    collaborators = cur.fetchall()
+    cur.close()
+    return collaborators
 
 
 @app.route('/collaborator-details/<int:emp_id>', methods=['GET'])
 def collaborator_details(emp_id):
     cur = mysql.cursor()
-    query = "SELECT * FROM collaborators WHERE emp_id = %s"
+    query = "SELECT * FROM collaborators_details WHERE emp_id = %s"
     cur.execute(query, (emp_id,))
-    collaborator = cur.fetchone()
+    collaborator = cur.fetchall()
     cur.close()
+
+
     collaborator_details = {
-        'name': collaborator[0],
-        'worked_projects': collaborator[1],  # Number of worked projects
-        'current_projects': collaborator[2],  # Number of current projects
-        'age': collaborator[3],  # Age
-        'emp_id': collaborator[4]  # Employee ID
+        'name': collaborator[0][0],
+        'worked_projects': collaborator[0][1],  # Number of worked projects
+        'current_projects': collaborator[0][2],  # Number of current projects
+        'age': collaborator[0][3],  # Age
+        'emp_id': collaborator[0][4]  # Employee ID
     }
+    #jsonify(collaborator_details)
+    return collaborator
+#
 
-    return jsonify(collaborator_details)
 
-# @app.route('/collaborator-details/<int:collaborator_id>', methods=['GET'])
-# def collaborator_details(collaborator_id):
-#     cur = mysql.cursor()
-#     query = "SELECT * FROM collaborators WHERE id = %s"
-#     cur.execute(query, (collaborator_id,))
-#     collaborator = cur.fetchone()
-#     cur.close()
-#     collaborator_details = {
-#         'name': collaborator[0],
-#         'worked_projects': collaborator[1],  # Number of worked projects
-#         'current_projects': collaborator[2],  # Number of current projects
-#         'age': collaborator[3],  # Age
-#         'emp_id': collaborator[4]  # Employee ID
-#     }
-#     return jsonify(collaborator_details)
-# Add this route at the end of the Flask app
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
