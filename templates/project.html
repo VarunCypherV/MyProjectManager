@@ -185,11 +185,34 @@ function showCollaboratorDetails(collaboratorId) {
             margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        .logout-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: black;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: grey;
+}
+
+        .container {
+            display: flex;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
     <h1>Welcome, {{ username }}!</h1>
+    <div class="container">
     <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
     <h2>Projects</h2>
 
     <div class="kanban-board">

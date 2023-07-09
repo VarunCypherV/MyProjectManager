@@ -195,14 +195,14 @@ def collaborator_details(emp_id):
 
 
     collaborator_details = {
-        'name': collaborator[0][0],
-        'worked_projects': collaborator[0][1],  # Number of worked projects
+        'name': collaborator[0][1],
+        'worked_projects': collaborator[0][3],  # Number of worked projects
         'current_projects': collaborator[0][2],  # Number of current projects
-        'age': collaborator[0][3],  # Age
+        'age': collaborator[0][0],  # Age
         'emp_id': collaborator[0][4]  # Employee ID
     }
     #jsonify(collaborator_details)
-    return collaborator
+    return collaborator_details
 #
 
 
