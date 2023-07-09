@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Project Management</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-         function showProjectDetails(projectId) {
+        function showProjectDetails(projectId) {
             $.ajax({
                 url: '/project-details/' + projectId,
                 type: 'GET',
@@ -21,8 +21,9 @@
                         var collaborator = collaborators[i];
                         var listItem = $('<li>').text(collaborator.collaborator_name);
                         $('#collaborators').append(listItem);
-                        listItem.click(showCollaboratorDetails(collaborator.collaborator_id))
-                        
+                        listItem.click(function() {
+                            showCollaboratorDetails(collaborator.collaborator_id);
+                        });
                     }
                 },
                 error: function (error) {
@@ -30,272 +31,383 @@
                 }
             });
         }
-function showCollaboratorDetails(collaboratorId) {
-    $.ajax({
-        url: '/collaborator-details/' + collaboratorId,
-        type: 'GET',
-        success: function (response) {
-            // Display collaborator details
-            console.log(response);
-            $('#collaborator_name').text(response.name);
-            $('#collaborator_emp_id').text(response.emp_id);
-            $('#collaborator_age').text(response.age);
-            $('#collaborator_worked_projects').text(response.worked_projects);
-            $('#collaborator_current_projects').text(response.current_projects);
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
-}
 
+        function showCollaboratorDetails(collaboratorId) {
+            $.ajax({
+                url: '/collaborator-details/' + collaboratorId,
+                type: 'GET',
+                success: function (response) {
+                    // Display collaborator details
+                    console.log(response);
+                    $('#collaborator_name').text(response.name);
+                    $('#collaborator_emp_id').text(response.emp_id);
+                    $('#collaborator_age').text(response.age);
+                    $('#collaborator_worked_projects').text(response.worked_projects);
+                    $('#collaborator_current_projects').text(response.current_projects);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var modal = $('#myModal');
+            var btn = $('#myBtn');
+            var span = $('.close');
+
+            btn.click(function () {
+                modal.css('display', 'block');
+            });
+
+            span.click(function () {
+                modal.css('display', 'none');
+            });
+
+            $(window).click(function (event) {
+                if (event.target == modal[0]) {
+                    modal.css('display', 'none');
+                }
+            });
+        });
     </script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #fdefd3;
-            background-image: repeating-linear-gradient(45deg, #fceec9, #fceec9 10px, #fdefd3 10px, #fdefd3 20px);
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #fdefd3;
+        background-image: repeating-linear-gradient(
+          45deg,
+          #fceec9,
+          #fceec9 10px,
+          #fdefd3 10px,
+          #fdefd3 20px
+        );
+      }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
 
-        .kanban-board {
-            display: flex;
-            justify-content: space-between;
-        }
+      .kanban-board {
+        display: flex;
+        justify-content: space-between;
+      }
 
-        .column {
-            flex-basis: 30%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #eef7f2;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+      .column {
+        flex-basis: 30%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #eef7f2;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-        .column:nth-child(2) {
-            background-color: #f3e9ee;
-        }
+      .column:nth-child(2) {
+        background-color: #f3e9ee;
+      }
 
-        .column:nth-child(3) {
-            background-color: #e9edf3;
-        }
+      .column:nth-child(3) {
+        background-color: #e9edf3;
+      }
 
-        .column h3 {
-            text-align: center;
-            color: #555;
-        }
+      .column h3 {
+        text-align: center;
+        color: #555;
+      }
 
-        .column ul {
-            list-style-type: none;
-            padding: 0;
-        }
+      .column ul {
+        list-style-type: none;
+        padding: 0;
+      }
 
-        .column li {
-            position: relative;
-            background-color: #f2f2f2;
-            padding: 8px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }
+      .column li {
+        position: relative;
+        background-color: #f2f2f2;
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
 
-        .column li:hover {
-            background-color: #e6e6e6;
-        }
+      .column li:hover {
+        background-color: #e6e6e6;
+      }
 
-        .column li form {
-            display: inline;
-        }
+      .column li form {
+        display: inline;
+      }
 
-        .column li button {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            padding: 5px 10px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      .column li button {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        padding: 5px 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        .column li button:hover {
-            background-color: #555;
-        }
+      .column li button:hover {
+        background-color: #555;
+      }
 
-        form {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      form {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        form input[type="text"],
-        form select {
-            padding: 5px;
-            margin-right: 10px;
-        }
+      form input[type="text"],
+      form select {
+        padding: 5px;
+        margin-right: 10px;
+      }
 
-        form button {
-            padding: 5px 10px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      form button {
+        padding: 5px 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        form button:hover {
-            background-color: #555;
-        }
+      form button:hover {
+        background-color: #555;
+      }
 
-        .delete-button {
-            margin-left: 5px;
-        }
+      .delete-button {
+        margin-left: 5px;
+      }
 
-        /* Project details section styles */
-        .project-details {
-            margin-top: 20px;
-            display: flex;
-        }
+      /* Project details section styles */
+      .project-details {
+        margin-top: 20px;
+        display: flex;
+      }
 
-        .project-details .column {
-            flex-basis: 33.33%;
-            padding: 10px;
-        }
+      .project-details .column {
+        flex-basis: 33.33%;
+        padding: 10px;
+      }
 
-        .project-details h2 {
-            color: #555;
-        }
+      .project-details h2 {
+        color: #555;
+      }
 
-        .project-details p {
-            margin: 0;
-        }
+      .project-details p {
+        margin: 0;
+      }
 
-        .project-details img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .logout-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: black;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
+      .project-details img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .logout-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: black;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-.logout-button:hover {
-  background-color: grey;
-}
+      .logout-button:hover {
+        background-color: grey;
+      }
 
-        .container {
-            display: flex;
-            justify-content: flex-end;
-        }
+      .container {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content/Box */
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      #myBtn{
+        padding: 5px 10px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Welcome, {{ username }}!</h1>
     <div class="container">
-    <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+      <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     </div>
     <h2>Projects</h2>
 
     <div class="kanban-board">
-        <div class="column">
-            <h3>Yet to Start</h3>
-            <ul>
-                {% for project in yet_to_start_projects %}
-                <li  id="{{ project.id }}" onclick="showProjectDetails(this.id)">
-                    {{ project.project_name }}
-                    <form action="{{ url_for('move_project') }}" method="post">
-                        <input type="hidden" name="project_id" value="{{ project.id }}">
-                        <input type="hidden" name="current_status" value="Yet to Start">
-                        <input type="hidden" name="new_status" value="In Progress">
-                        <button type="submit">-></button>
-                    </form>
-                </li>
-                {% endfor %}
-                <form action="{{ url_for('add_project') }}" method="post">
-                    <input type="text" name="project_name" placeholder="Project Name" required>
-                    <input type="hidden" name="status" value="Yet to Start">
-                    <button type="submit">Add Project</button>
-                </form>
-            </ul>
-        </div>
+      <div class="column">
+        <h3>Yet to Start</h3>
+        <ul>
+          {% for project in yet_to_start_projects %}
+          <li id="{{ project.id }}" onclick="showProjectDetails(this.id)">
+            {{ project.project_name }}
+            <form action="{{ url_for('move_project') }}" method="post">
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <input type="hidden" name="current_status" value="Yet to Start" />
+              <input type="hidden" name="new_status" value="In Progress" />
+              <button type="submit">-></button>
+            </form>
+          </li>
+          {% endfor %}
+          <button id="myBtn">Add Project</button>
+          <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <form action="{{ url_for('add_project') }}" method="post">
+                <input
+                  type="text"
+                  name="project_id"
+                  placeholder="Project Id"
+                  required
+                />
+                <input
+                  type="text"
+                  name="project_name"
+                  placeholder="Project Name"
+                  required
+                />
+                <input
+                  type="text"
+                  name="start_date"
+                  placeholder="Start date"
+                  required
+                />
+                <input
+                  type="text"
+                  name="end_date"
+                  placeholder="End date"
+                  required
+                />
+                <input type="text" name="owner" placeholder="Owner" required />
+                <input
+                  type="text"
+                  name="budget"
+                  placeholder="Budget"
+                  required
+                />
+                <input type="hidden" name="status" value="Yet to Start" />
+                <button type="submit">Add Project</button>
+              </form>
+            </div>
+          </div>
+        </ul>
+      </div>
 
-        <div class="column">
-            <h3>In Progress</h3>
-            <ul>
-                {% for project in in_progress_projects %}
-                <li  id="{{ project.id }}" onclick="showProjectDetails(this.id)">
-                    {{ project.project_name }}
-                    <form action="{{ url_for('move_project') }}" method="post">
-                        <input type="hidden" name="project_id" value="{{ project.id }}">
-                        <input type="hidden" name="current_status" value="In Progress">
-                        <input type="hidden" name="new_status" value="Finished">
-                        <button type="submit">-></button>
-                    </form>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+      <div class="column">
+        <h3>In Progress</h3>
+        <ul>
+          {% for project in in_progress_projects %}
+          <li id="{{ project.id }}" onclick="showProjectDetails(this.id)">
+            {{ project.project_name }}
+            <form action="{{ url_for('move_project') }}" method="post">
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <input type="hidden" name="current_status" value="In Progress" />
+              <input type="hidden" name="new_status" value="Finished" />
+              <button type="submit">-></button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
 
-        <div class="column">
-            <h3>Finished</h3>
-            <ul>
-                {% for project in finished_projects %}
-                <li id="{{ project.id }}"  onclick="showProjectDetails(this.id)">
-                    {{ project.project_name }}
-                    <form action="{{ url_for('delete_project', project_id=project.id) }}" method="post"
-                        class="delete-button">
-                        <input type="hidden" name="project_id" value="{{ project.id }}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+      <div class="column">
+        <h3>Finished</h3>
+        <ul>
+          {% for project in finished_projects %}
+          <li id="{{ project.id }}" onclick="showProjectDetails(this.id)">
+            {{ project.project_name }}
+            <form
+              action="{{ url_for('delete_project', project_id=project.id) }}"
+              method="post"
+              class="delete-button"
+            >
+              <input type="hidden" name="project_id" value="{{ project.id }}" />
+              <button type="submit">Delete</button>
+            </form>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
 
     <!-- Project details section -->
     <div class="project-details">
-        <div class="column">
-            <h2>Collaborators</h2>
-            
-            <ul id="collaborators" > 
-            </ul>
-        </div>
-        <div class="column">
-            <h2>Project Details</h2>
-            <p>Start Date: <span id="start_date"></span></p>
-            <p>end_date : <span id="end_date"></span></p>
-            <p>Budget: <span id="budget"></span></p>
-            <p>Owner: <span id="owner"></span></p>
-            <!-- Add more project details as required -->
-        </div>
-        <div class="column">
-            <h2>name <span id="collaborator_name"></span></h2>
-            <p>worked_projects: <span id="collaborator_worked_projects"></span></p>
-            <p>current_projects: <span id="collaborator_current_projects"></span></p>
-            <p>age<span id="collaborator_age"></span></p>
-            <p>emp_id<span id="collaborator_emp_id"></span></p>
-        </ul>
-        </div>
+      <div class="column">
+        <h2>Collaborators</h2>
+
+        <ul id="collaborators"></ul>
+      </div>
+      <div class="column">
+        <h2>Project Details</h2>
+        <p>Start Date: <span id="start_date"></span></p>
+        <p>end_date : <span id="end_date"></span></p>
+        <p>Budget: <span id="budget"></span></p>
+        <p>Owner: <span id="owner"></span></p>
+        <!-- Add more project details as required -->
+      </div>
+      <div class="column">
+        <h2>name <span id="collaborator_name"></span></h2>
+        <p>worked_projects: <span id="collaborator_worked_projects"></span></p>
+        <p>
+          current_projects: <span id="collaborator_current_projects"></span>
+        </p>
+        <p>age<span id="collaborator_age"></span></p>
+        <p>emp_id<span id="collaborator_emp_id"></span></p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -113,10 +113,15 @@ def project(username):
     return render_template('project.html', username=username, yet_to_start_projects=yet_to_start_projects,
                            in_progress_projects=in_progress_projects, finished_projects=finished_projects)
 
-def add_project_to_db(project_name, status):
+def add_project_to_db(project_id,start_date,end_date,budget,owner,project_name, status):
     cur = mysql.cursor()
-    query = "INSERT INTO projects (project_name, status) VALUES (%s, %s)"
-    cur.execute(query, (project_name, status))
+    query1 = "INSERT INTO projects(project_name , status) VALUES (%s , %s)"
+    cur.execute(query1, (project_name,status))
+    query2="SELECT id FROM projects WHERE project_name=(%s)"
+    cur.execute(query2, (project_name))
+    query = "INSERT INTO project_details (project_id,start_date , end_date , budget , owner) VALUES (%s,%s , %s , %s , %s)"
+    cur.execute(query, (query2,start_date,end_date,budget,owner))
+   
     mysql.commit()
     cur.close()
 
@@ -124,12 +129,15 @@ def add_project_to_db(project_name, status):
 def add_project():
     if 'username' not in session:
         return redirect(url_for('login'))
-
+    project_id=request.form['project_id']
     project_name = request.form['project_name']
     status = request.form['status']
-
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    owner = request.form['owner']
+    budget = request.form['budget']
     # Add the project to the database with the specified status
-    add_project_to_db(project_name, status)
+    add_project_to_db(project_id,start_date,end_date,budget,owner,project_name,status)
 
     return redirect(url_for('project', username=session['username']))
 
