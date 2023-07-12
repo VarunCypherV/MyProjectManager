@@ -28,10 +28,10 @@ def authenticate_user(username, password):
     cur.close()
     return user
 
-def register_user(username, password):
+def register_user(username, password, email, phoneno):
     cur = mysql.cursor()
-    query = "INSERT INTO users (username, password) VALUES (%s, %s)"
-    cur.execute(query, (username, password))
+    query = "INSERT INTO users (username, password, email, phoneno) VALUES (%s, %s, %s, %s)"
+    cur.execute(query, (username, password, email, phoneno))
     mysql.commit()
     cur.close()
 
@@ -66,9 +66,10 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+        email = request.form['email']
+        phoneno=request.form['phone']
         # Register the user by adding to the database
-        register_user(username, password)
+        register_user(username, password , email, phoneno)
 
         # Redirect back to the login page after registration
         return redirect(url_for('login'))
@@ -113,23 +114,29 @@ def project(username):
     return render_template('project.html', username=username, yet_to_start_projects=yet_to_start_projects,
                            in_progress_projects=in_progress_projects, finished_projects=finished_projects)
 
-def add_project_to_db(project_id,start_date,end_date,budget,owner,project_name, status):
+def add_project_to_db(start_date, end_date, budget, owner, project_name, status):
     cur = mysql.cursor()
-    query1 = "INSERT INTO projects(project_name , status) VALUES (%s , %s)"
-    cur.execute(query1, (project_name,status))
-    query2="SELECT id FROM projects WHERE project_name=(%s)"
-    cur.execute(query2, (project_name))
-    query = "INSERT INTO project_details (project_id,start_date , end_date , budget , owner) VALUES (%s,%s , %s , %s , %s)"
-    cur.execute(query, (query2,start_date,end_date,budget,owner))
-   
+    query1 = "INSERT INTO projects (project_name, status) VALUES (%s, %s)"
+    cur.execute(query1, (project_name, status))
     mysql.commit()
+
+    query2 = "SELECT id FROM projects WHERE project_name = %s"
+    cur.execute(query2, (project_name,))
+    result = cur.fetchone()
+    project_id = result[0]
+
+    query3 = "INSERT INTO project_details (project_id, start_date, end_date, budget, owner) VALUES (%s, %s, %s, %s, %s)"
+    cur.execute(query3, (project_id, start_date, end_date, budget, owner))
+    mysql.commit()
+
     cur.close()
+
 
 @app.route('/add_project', methods=['POST'])
 def add_project():
     if 'username' not in session:
         return redirect(url_for('login'))
-    project_id=request.form['project_id']
+    # project_id=request.form['project_id']
     project_name = request.form['project_name']
     status = request.form['status']
     start_date = request.form['start_date']
@@ -137,7 +144,7 @@ def add_project():
     owner = request.form['owner']
     budget = request.form['budget']
     # Add the project to the database with the specified status
-    add_project_to_db(project_id,start_date,end_date,budget,owner,project_name,status)
+    add_project_to_db(start_date,end_date,budget,owner,project_name,status)
 
     return redirect(url_for('project', username=session['username']))
 

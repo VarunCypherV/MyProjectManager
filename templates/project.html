@@ -308,12 +308,12 @@
             <div class="modal-content">
               <span class="close">&times;</span>
               <form action="{{ url_for('add_project') }}" method="post">
-                <input
+                <!-- <input
                   type="text"
                   name="project_id"
                   placeholder="Project Id"
                   required
-                />
+                /> -->
                 <input
                   type="text"
                   name="project_name"
@@ -400,13 +400,13 @@
         <!-- Add more project details as required -->
       </div>
       <div class="column">
-        <h2>name <span id="collaborator_name"></span></h2>
-        <p>worked_projects: <span id="collaborator_worked_projects"></span></p>
+        <h2><span id="collaborator_name"></span></h2>
+        <p>worked_projects : <span id="collaborator_worked_projects"></span></p>
         <p>
-          current_projects: <span id="collaborator_current_projects"></span>
+          current_projects : <span id="collaborator_current_projects"></span>
         </p>
-        <p>age<span id="collaborator_age"></span></p>
-        <p>emp_id<span id="collaborator_emp_id"></span></p>
+        <p>age :<span id="collaborator_age"></span></p>
+        <p>emp_id :<span id="collaborator_emp_id"></span></p>
       </div>
     </div>
   </body>
